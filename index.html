@@ -12,13 +12,13 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --cream:    #eae6de;
-      --cream-dk: #dedad1;
+      --cream:    #ffffff;
+      --cream-dk: #f5f5f5;
       --ink:      #1a1a18;
       --ink-soft: #4a4a45;
       --gold:     #b8945c;
       --gold-lt:  #d4b483;
-      --white:    #f7f5f0;
+      --white:    #ffffff;
     }
 
     html { scroll-behavior: smooth; }
@@ -685,18 +685,24 @@
       <div class="nav-logo-mark">V</div>
       <div class="nav-logo-text">Vertea<br>Group</div>
     </a>
-    <ul class="nav-links">
+    
+<div class="lang-switch" style="margin-right:20px;font-size:12px;letter-spacing:.12em;">
+<a href="#" onclick="setLanguage('en')">ENG</a> |
+<a href="#" onclick="setLanguage('es')">SPA</a>
+</div>
+
+<ul class="nav-links">
       <li><a href="#nosotros">Nosotros</a></li>
       <li><a href="#servicios">Servicios</a></li>
       <li><a href="#contacto">Contacto</a></li>
     </ul>
-    <a class="nav-cta" href="#contacto">Agenda Ahora</a>
+    <a class="nav-cta" href="#contacto"><span class="cta-text">Agenda Ahora</span></a>
   </nav>
 
   <!-- HERO -->
   <section class="hero" id="inicio">
-    <p class="hero-eyebrow">Expansión Estratégica · IA &amp; Operaciones</p>
-    <h1 class="hero-title">Impulsa el <em>Crecimiento</em> de tu Empresa</h1>
+    <p class="hero-eyebrow"><span id="hero-eyebrow">Expansión Estratégica · IA &amp; Operaciones</span></p>
+    <h1 class="hero-title"><span id="hero-title">Impulsa el <em>Crecimiento</em> de tu Empresa</span></h1>
 
     <div class="clocks-row" id="clocksRow">
       <div class="clock-item">
@@ -753,7 +759,7 @@
   </div>
 
   <!-- ABOUT -->
-  <section class="about" id="nosotros">
+  <section class="about" id="nosotros"><div id="about-dynamic">
     <div class="about-image">
       <!-- Using a high-quality architecture photo via Unsplash -->
       <img
@@ -764,8 +770,8 @@
       <div class="about-image-overlay"></div>
     </div>
     <div class="about-content">
-      <p class="section-label reveal">Sobre Nosotros</p>
-      <h2 class="reveal">Ayudamos a Empresas a Escalar al Siguiente Nivel</h2>
+      <p class="section-label reveal"><span id="about-label">Sobre Nosotros</span></p>
+      <h2 class="reveal"><span id="about-title">Ayudamos a Empresas a Escalar al Siguiente Nivel</span></h2>
 
       <div class="about-divider reveal"></div>
 
@@ -801,14 +807,14 @@
 
       <a class="btn-outline reveal" href="#servicios">Saber más de nosotros</a>
     </div>
-  </section>
+  </div></section>
 
   <!-- SERVICES -->
-  <section class="services" id="servicios">
+  <section class="services" id="servicios"><div id="services-dynamic">
     <div class="services-header reveal">
       <div>
         <p class="section-label">Lo que hacemos</p>
-        <h2>Nuestras<br>Especialidades</h2>
+        <h2><span id="services-title">Nuestras<br>Especialidades</span></h2>
       </div>
       <p>Soluciones integrales que conectan tecnología, estrategia y ejecución para escalar tu empresa.</p>
     </div>
@@ -905,7 +911,7 @@
       </div>
 
     </div>
-  </section>
+  </div></section>
 
   <!-- CTA BAND -->
   <section class="cta-band" id="contacto">
@@ -1053,10 +1059,60 @@
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    // ── INIT ───────────────────────────────────────────────
+    
+const translations={
+es:{
+heroEyebrow:"Expansión Estratégica · IA & Operaciones",
+heroTitle:"Impulsa el <em>Crecimiento</em> de tu Empresa",
+aboutLabel:"Sobre Nosotros",
+aboutTitle:"Ayudamos a Empresas a Escalar al Siguiente Nivel",
+servicesTitle:"Nuestras<br>Especialidades",
+cta:"Agenda Ahora"
+},
+en:{
+heroEyebrow:"Strategic Expansion · AI & Operations",
+heroTitle:"Accelerate Your Company's <em>Growth</em>",
+aboutLabel:"About Us",
+aboutTitle:"Helping Businesses Scale to the Next Level",
+servicesTitle:"Our<br>Specialties",
+cta:"Book Now"
+}
+};
+
+function setLanguage(lang){
+const t=translations[lang];
+document.getElementById('hero-eyebrow').innerHTML=t.heroEyebrow;
+document.getElementById('hero-title').innerHTML=t.heroTitle;
+document.getElementById('about-label').innerHTML=t.aboutLabel;
+document.getElementById('about-title').innerHTML=t.aboutTitle;
+document.getElementById('services-title').innerHTML=t.servicesTitle;
+document.querySelectorAll('.cta-text').forEach(el=>el.innerHTML=t.cta);
+}
+
+// ── INIT ───────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', initClocks);
     initClocks();
-  </script>
+  
+const content={
+en:{
+about:`<div class="about-image"><img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=900&q=80"><div class="about-image-overlay"></div></div><div class="about-content"><p class="section-label">About Us</p><h2>Helping Businesses Scale to the Next Level</h2><div class="about-divider"></div><p>At Vertea Group, we help companies scale by simplifying decision-making.</p><p>We replace outdated processes and spreadsheets with modern tools that provide real-time visibility.</p><p>We transform information into actionable dashboards for revenue, expenses and growth opportunities.</p><div class="about-stats"><div class="stat"><span class="stat-number">12+</span><span class="stat-label">Years Experience</span></div><div class="stat"><span class="stat-number">3</span><span class="stat-label">Active Markets</span></div><div class="stat"><span class="stat-number">200+</span><span class="stat-label">Projects Delivered</span></div></div></div>`,
+services:`<div class="services-header"><div><p class="section-label">What we do</p><h2>Our Specialties</h2></div><p>Integrated solutions connecting technology, strategy and execution.</p></div>`
+},
+es:{
+about:document.getElementById('about-dynamic').innerHTML,
+services:document.getElementById('services-dynamic').innerHTML
+}
+};
+
+const oldSetLanguage=setLanguage;
+setLanguage=function(lang){
+oldSetLanguage(lang);
+if(content[lang]){
+document.getElementById('about-dynamic').innerHTML=content[lang].about;
+document.getElementById('services-dynamic').innerHTML=content[lang].services;
+}
+}
+</script>
 
 </body>
 </html>
