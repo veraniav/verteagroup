@@ -337,7 +337,27 @@ input:focus{outline:none}
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:840},&quot;brandName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Vertea Group&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;tagline&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Business systems &amp; process consulting&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;consultantName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Verania&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;calendlyUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://calendly.com/verania-gescal/30min&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:840},&quot;brandName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Vertea Group&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;tagline&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Business systems &amp; process consulting&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;consultantName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Verania&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;calendlyUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://calendly.com/verania-gescal/30min&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;formspreeEndpoint&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://formspree.io/f/YOUR_FORM_ID&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+const businessTypes = [
+  { key: 'retail', label: 'Retail & Commerce' },
+  { key: 'services', label: 'Professional Services' },
+  { key: 'hospitality', label: 'Hospitality & Food' },
+  { key: 'ecommerce', label: 'E‑commerce' },
+  { key: 'manufacturing', label: 'Manufacturing' },
+  { key: 'wellness', label: 'Health & Wellness' },
+  { key: 'creative', label: 'Creative & Agency' },
+  { key: 'other', label: 'Something else' },
+];
+const pains = [
+  { key: 'process', label: 'Disorganized processes', desc: 'Things live in too many places' },
+  { key: 'comms', label: 'Team communication', desc: 'Info gets lost or duplicated' },
+  { key: 'manual', label: 'Manual, repetitive work', desc: 'Too much copy‑paste & admin' },
+  { key: 'visibility', label: 'No clear visibility', desc: "Hard to see what's happening" },
+  { key: 'scaling', label: 'Struggling to scale', desc: 'What worked before is breaking' },
+  { key: 'tools', label: 'Tool overload', desc: 'Too many apps, none connected' },
+];
+const labelOf = (list, key) => { const f = list.find(x => x.key === key); return f ? f.label : '—'; };
+
 class Component extends DCLogic {
   state = {
     screen: 'welcome',
@@ -361,10 +381,40 @@ class Component extends DCLogic {
   start() { this.setState({ screen: 'onboard', step: 0 }); }
   back() { this.setState(s => ({ step: Math.max(0, s.step - 1) })); }
   next() {
+    const finishing = this.state.step === 4;
     this.setState(s => {
       if (s.step < 4) return { step: s.step + 1 };
       return { screen: 'dashboard' };
     });
+    if (finishing) this.submitToFormspree();
+  }
+
+  async submitToFormspree() {
+    const endpoint = this.props.formspreeEndpoint;
+    if (!endpoint || endpoint.includes('YOUR_FORM_ID')) return;
+    const s = this.state;
+    const payload = {
+      name: s.name,
+      email: s.email,
+      businessType: labelOf(businessTypes, s.businessType),
+      teamSize: s.employees,
+      painPoint: labelOf(pains, s.painPoint),
+      goal: s.goal,
+      currentTools: s.tools.join(', '),
+      timeline: s.timeline,
+      techLevel: s.techLevel,
+      techComfort: this.techBucket(),
+      recommendedSystem: this.recommend(),
+    };
+    try {
+      await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload),
+      });
+    } catch (err) {
+      console.error('[onboarding] Formspree submission failed:', err);
+    }
   }
   restart() {
     this.setState({ screen: 'welcome', step: 0, name: '', email: '', businessType: '', employees: '', painPoint: '', goal: '', tools: [], timeline: '', techLevel: 50 });
@@ -400,31 +450,13 @@ class Component extends DCLogic {
   renderVals() {
     const s = this.state;
     const P = this.props;
-    const brandName = P.brandName || 'Vertea';
+    const brandName = P.brandName || 'Gescal';
     const tagline = P.tagline || 'Business systems & process consulting';
     const consultant = P.consultantName || 'Verania';
     const calUrl = P.calendlyUrl || 'https://calendly.com/verania-gescal/30min';
 
     // ---- option data ----
-    const businessTypes = [
-      { key: 'retail', label: 'Retail & Commerce' },
-      { key: 'services', label: 'Professional Services' },
-      { key: 'hospitality', label: 'Hospitality & Food' },
-      { key: 'ecommerce', label: 'E‑commerce' },
-      { key: 'manufacturing', label: 'Manufacturing' },
-      { key: 'wellness', label: 'Health & Wellness' },
-      { key: 'creative', label: 'Creative & Agency' },
-      { key: 'other', label: 'Something else' },
-    ];
     const employees = ['Just me', '2–10', '11–50', '51–200', '200+'];
-    const pains = [
-      { key: 'process', label: 'Disorganized processes', desc: 'Things live in too many places' },
-      { key: 'comms', label: 'Team communication', desc: 'Info gets lost or duplicated' },
-      { key: 'manual', label: 'Manual, repetitive work', desc: 'Too much copy‑paste & admin' },
-      { key: 'visibility', label: 'No clear visibility', desc: "Hard to see what's happening" },
-      { key: 'scaling', label: 'Struggling to scale', desc: 'What worked before is breaking' },
-      { key: 'tools', label: 'Tool overload', desc: 'Too many apps, none connected' },
-    ];
     const goals = ['Save time', 'Better collaboration', 'Clearer data', 'Scale operations', 'Reduce costs'];
     const toolList = ['Spreadsheets / Excel', 'Google Workspace', 'Email & WhatsApp', 'Trello / Asana', 'monday.com', 'Notion', 'QuickBooks', 'Pen & paper', 'Nothing yet'];
     const timelines = ['As soon as possible', 'In 1–3 months', 'In 3–6 months', 'Just exploring'];
@@ -502,7 +534,6 @@ class Component extends DCLogic {
     };
 
     // ---- profile snapshot ----
-    const labelOf = (list, key) => { const f = list.find(x => x.key === key); return f ? f.label : '—'; };
     const profileItems = [
       { label: 'Business', value: labelOf(businessTypes, s.businessType) },
       { label: 'Team size', value: s.employees || '—' },
