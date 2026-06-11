@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;color:#16121F;background:#F6F5FB}
+button,input{font-family:inherit}
+input[type=range]{accent-color:#7C5CFF;height:6px}
+input:focus{outline:none}
+::selection{background:#E2D9FF}
+@keyframes scIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes scFade{from{opacity:0}to{opacity:1}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#F6F5FB;color:#16121F">
+
+  <!-- ============ WELCOME ============ -->
+  <sc-if value="{{ isWelcome }}" hint-placeholder-val="{{ true }}">
+    <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 24px;background:radial-gradient(1100px 560px at 50% -8%, #EEE7FF 0%, #F6F5FB 58%)">
+      <div style="max-width:600px;width:100%;text-align:center;animation:scIn .55s ease both">
+        <div style="display:inline-flex;align-items:center;gap:11px;margin-bottom:34px">
+          <div style="width:40px;height:40px;border-radius:11px;background:#16121F;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:700;font-size:19px">{{ brandInitial }}</div>
+          <span style="font-weight:800;font-size:19px;letter-spacing:-.02em">{{ brandName }}</span>
+        </div>
+        <div style="display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:#fff;border:1px solid #ECEAF4;font-size:13px;font-weight:600;color:#7C5CFF;margin-bottom:24px;box-shadow:0 2px 8px rgba(20,16,40,.04)">
+          <span style="width:7px;height:7px;border-radius:50%;background:#7C5CFF;display:inline-block"></span>
+          Business Optimization Program
+        </div>
+        <h1 style="font-family:'Space Grotesk';font-weight:700;font-size:46px;line-height:1.06;letter-spacing:-.03em;margin:0 0 18px;text-wrap:balance">Let's build a system that grows with your business.</h1>
+        <p style="font-size:18px;line-height:1.6;color:#6E6A7C;margin:0 auto 34px;max-width:480px;text-wrap:pretty">Answer a few quick questions and I'll map out where to focus, recommend the right tools, and set up a free strategy call — tailored to how you actually work.</p>
+        <div style="display:flex;justify-content:center;gap:0;margin-bottom:36px;flex-wrap:wrap">
+          <div style="padding:0 26px;border-right:1px solid #E7E4F0">
+            <div style="font-family:'Space Grotesk';font-weight:700;font-size:26px">2 min</div>
+            <div style="font-size:13px;color:#8C8898;font-weight:500;margin-top:2px">to complete</div>
+          </div>
+          <div style="padding:0 26px;border-right:1px solid #E7E4F0">
+            <div style="font-family:'Space Grotesk';font-weight:700;font-size:26px">5</div>
+            <div style="font-size:13px;color:#8C8898;font-weight:500;margin-top:2px">quick questions</div>
+          </div>
+          <div style="padding:0 26px">
+            <div style="font-family:'Space Grotesk';font-weight:700;font-size:26px">Free</div>
+            <div style="font-size:13px;color:#8C8898;font-weight:500;margin-top:2px">strategy call</div>
+          </div>
+        </div>
+        <button onClick="{{ onStart }}" style="padding:16px 40px;border-radius:14px;border:none;background:#7C5CFF;color:#fff;font-weight:700;font-size:17px;cursor:pointer;box-shadow:0 10px 28px rgba(124,92,255,.36);transition:transform .15s" style-hover="transform:translateY(-2px)">Get started</button>
+        <p style="font-size:13px;color:#A39FB3;margin-top:16px">No account needed · Your answers stay private</p>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ ONBOARDING ============ -->
+  <sc-if value="{{ isOnboard }}" hint-placeholder-val="{{ true }}">
+    <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:36px 20px">
+      <div style="max-width:660px;width:100%">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:32px;height:32px;border-radius:9px;background:#16121F;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:700;font-size:15px">{{ brandInitial }}</div>
+            <span style="font-weight:700;font-size:16px;letter-spacing:-.02em">{{ brandName }}</span>
+          </div>
+          <span style="font-size:13px;font-weight:600;color:#8C8898">{{ stepLabel }}</span>
+        </div>
+        <div style="height:6px;border-radius:99px;background:#E9E5F4;overflow:hidden;margin-bottom:24px">
+          <div style="height:100%;border-radius:99px;background:linear-gradient(90deg,#8C6BFF,#7C5CFF);transition:width .4s cubic-bezier(.4,0,.2,1);width:{{ progressWidth }}"></div>
+        </div>
+
+        <div key="{{ stepKey }}" style="background:#fff;border:1px solid #ECEAF4;border-radius:22px;padding:34px;box-shadow:0 14px 44px rgba(20,16,40,.07);animation:scIn .35s ease both">
+          <h2 style="font-family:'Space Grotesk';font-weight:700;font-size:27px;letter-spacing:-.025em;margin:0 0 6px;text-wrap:balance">{{ stepTitle }}</h2>
+          <p style="font-size:15.5px;color:#6E6A7C;margin:0 0 26px;text-wrap:pretty">{{ stepSubtitle }}</p>
+
+          <!-- Step 0: name + email -->
+          <sc-if value="{{ isStep0 }}">
+            <div style="display:flex;flex-direction:column;gap:18px">
+              <label style="display:block">
+                <span style="display:block;font-size:13px;font-weight:600;color:#3A3550;margin-bottom:7px">Your name</span>
+                <input value="{{ name }}" onInput="{{ setName }}" placeholder="e.g. Alex Rivera" style="width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid #ECEAF4;font-size:16px;color:#16121F;background:#FBFAFE;transition:border-color .15s" style-focus="border-color:#7C5CFF;background:#fff" />
+              </label>
+              <label style="display:block">
+                <span style="display:block;font-size:13px;font-weight:600;color:#3A3550;margin-bottom:7px">Work email</span>
+                <input value="{{ email }}" onInput="{{ setEmail }}" type="email" placeholder="you@company.com" style="width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid #ECEAF4;font-size:16px;color:#16121F;background:#FBFAFE;transition:border-color .15s" style-focus="border-color:#7C5CFF;background:#fff" />
+                <span style="display:block;font-size:12.5px;color:#A39FB3;margin-top:7px">I'll only use this to follow up on your strategy call.</span>
+              </label>
+            </div>
+          </sc-if>
+
+          <!-- Step 1: business type + size -->
+          <sc-if value="{{ isStep1 }}">
+            <div>
+              <span style="display:block;font-size:13px;font-weight:600;color:#3A3550;margin-bottom:11px">What type of business do you run?</span>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+                <sc-for list="{{ businessOptions }}" as="opt" hint-placeholder-count="8">
+                  <button onClick="{{ opt.onClick }}" style="{{ opt.style }}">{{ opt.label }}</button>
+                </sc-for>
+              </div>
+              <span style="display:block;font-size:13px;font-weight:600;color:#3A3550;margin:24px 0 11px">How big is your team?</span>
+              <div style="display:flex;flex-wrap:wrap;gap:9px">
+                <sc-for list="{{ employeeOptions }}" as="opt" hint-placeholder-count="5">
+                  <button onClick="{{ opt.onClick }}" style="{{ opt.style }}">{{ opt.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- Step 2: pain point + goal -->
+          <sc-if value="{{ isStep2 }}">
+            <div>
+              <span style="display:block;font-size:13px;font-weight:600;color:#3A3550;margin-bottom:11px">What's the biggest pain point right now?</span>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+                <sc-for list="{{ painOptions }}" as="opt" hint-placeholder-count="6">
+                  <button onClick="{{ opt.onClick }}" style="{{ opt.style }}">
+                    <span style="font-weight:600;font-size:15px;color:{{ opt.titleColor }}">{{ opt.label }}</span>
+                    <span style="font-size:12.5px;color:{{ opt.descColor }};line-height:1.35">{{ opt.desc }}</span>
+                  </button>
+                </sc-for>
+              </div>
+              <span style="display:block;font-size:13px;font-weight:600;color:#3A3550;margin:24px 0 11px">What outcome matters most to you?</span>
+              <div style="display:flex;flex-wrap:wrap;gap:9px">
+                <sc-for list="{{ goalOptions }}" as="opt" hint-placeholder-count="5">
+                  <button onClick="{{ opt.onClick }}" style="{{ opt.style }}">{{ opt.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- Step 3: tools + timeline -->
+          <sc-if value="{{ isStep3 }}">
+            <div>
+              <span style="display:block;font-size:13px;font-weight:600;color:#3A3550;margin-bottom:5px">What do you currently use to run things?</span>
+              <span style="display:block;font-size:12.5px;color:#A39FB3;margin-bottom:11px">Select all that apply</span>
+              <div style="display:flex;flex-wrap:wrap;gap:9px">
+                <sc-for list="{{ toolChips }}" as="opt" hint-placeholder-count="9">
+                  <button onClick="{{ opt.onClick }}" style="{{ opt.style }}">{{ opt.label }}</button>
+                </sc-for>
+              </div>
+              <span style="display:block;font-size:13px;font-weight:600;color:#3A3550;margin:24px 0 11px">When do you want to make a change?</span>
+              <div style="display:flex;flex-wrap:wrap;gap:9px">
+                <sc-for list="{{ timelineOptions }}" as="opt" hint-placeholder-count="4">
+                  <button onClick="{{ opt.onClick }}" style="{{ opt.style }}">{{ opt.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- Step 4: tech slider -->
+          <sc-if value="{{ isStep4 }}">
+            <div>
+              <div style="text-align:center;padding:8px 0 4px">
+                <div style="font-family:'Space Grotesk';font-weight:700;font-size:30px;color:#7C5CFF;letter-spacing:-.02em">{{ techLabel }}</div>
+                <div style="font-size:14.5px;color:#6E6A7C;margin-top:6px;max-width:380px;margin-left:auto;margin-right:auto;text-wrap:pretty">{{ techDesc }}</div>
+              </div>
+              <div style="padding:26px 6px 4px">
+                <input type="range" min="0" max="100" value="{{ techLevel }}" onInput="{{ setTech }}" style="width:100%;cursor:pointer" />
+                <div style="display:flex;justify-content:space-between;margin-top:12px;font-size:12.5px;font-weight:600;color:#A39FB3">
+                  <span>Beginner</span>
+                  <span>Intermediate</span>
+                  <span>Advanced</span>
+                </div>
+              </div>
+              <div style="margin-top:14px;padding:14px 16px;border-radius:12px;background:#F4F1FF;border:1px solid #E9E3FF;font-size:13.5px;color:#6E6A7C;line-height:1.5;text-wrap:pretty">This just helps me match the right level of support — whether you want everything set up for you or prefer to learn the tools hands-on.</div>
+            </div>
+          </sc-if>
+
+          <div style="display:flex;gap:11px;margin-top:30px">
+            <sc-if value="{{ showBack }}">
+              <button onClick="{{ onBack }}" style="padding:15px 22px;border-radius:12px;border:1.5px solid #ECEAF4;background:#fff;color:#3A3550;font-weight:600;font-size:16px;cursor:pointer">Back</button>
+            </sc-if>
+            <button onClick="{{ onContinue }}" disabled="{{ continueDisabled }}" style="{{ continueStyle }}">{{ continueLabel }}</button>
+          </div>
+        </div>
+        <p style="text-align:center;font-size:12.5px;color:#B5B1C2;margin-top:18px">Step {{ stepNum }} of 5 · You can change answers anytime before your call</p>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ DASHBOARD ============ -->
+  <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+    <div style="animation:scFade .5s ease both">
+      <div style="border-bottom:1px solid #ECEAF4;background:rgba(246,245,251,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:10">
+        <div style="display:flex;align-items:center;justify-content:space-between;max-width:1060px;margin:0 auto;padding:18px 24px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:32px;height:32px;border-radius:9px;background:#16121F;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:700;font-size:15px">{{ brandInitial }}</div>
+            <span style="font-weight:700;font-size:16px;letter-spacing:-.02em">{{ brandName }}</span>
+          </div>
+          <button onClick="{{ onRestart }}" style="padding:9px 16px;border-radius:10px;border:1.5px solid #ECEAF4;background:#fff;color:#6E6A7C;font-weight:600;font-size:13.5px;cursor:pointer">Start over</button>
+        </div>
+      </div>
+
+      <div style="max-width:1060px;margin:0 auto;padding:34px 24px 12px">
+        <div style="font-size:13px;font-weight:700;letter-spacing:.08em;color:#7C5CFF;margin-bottom:12px">YOUR OPTIMIZATION PLAN</div>
+        <h1 style="font-family:'Space Grotesk';font-weight:700;font-size:42px;letter-spacing:-.03em;margin:0 0 12px;line-height:1.05">Welcome aboard, {{ firstName }}.</h1>
+        <p style="font-size:17.5px;color:#6E6A7C;margin:0;max-width:560px;line-height:1.55;text-wrap:pretty">Based on what you shared, here's where we'll focus and a starting point that fits how your team works. Book a call whenever you're ready to dig in.</p>
+      </div>
+
+      <div style="max-width:1060px;margin:0 auto;padding:22px 24px 60px;display:grid;grid-template-columns:1.55fr 1fr;gap:22px;align-items:start">
+        <div style="display:flex;flex-direction:column;gap:22px">
+
+          <div style="background:#fff;border:1px solid #ECEAF4;border-radius:20px;padding:26px;box-shadow:0 8px 30px rgba(20,16,40,.05)">
+            <h3 style="font-family:'Space Grotesk';font-weight:700;font-size:18px;margin:0 0 18px;letter-spacing:-.02em">Your snapshot</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px 24px">
+              <sc-for list="{{ profileItems }}" as="it" hint-placeholder-count="4">
+                <div>
+                  <div style="font-size:11.5px;font-weight:700;letter-spacing:.06em;color:#A39FB3;text-transform:uppercase;margin-bottom:5px">{{ it.label }}</div>
+                  <div style="font-size:15.5px;font-weight:600;color:#16121F">{{ it.value }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="margin-top:20px;padding-top:18px;border-top:1px solid #F0EDF7">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+                <span style="font-size:11.5px;font-weight:700;letter-spacing:.06em;color:#A39FB3;text-transform:uppercase">Tech comfort</span>
+                <span style="font-size:13.5px;font-weight:700;color:#7C5CFF">{{ techLabel }}</span>
+              </div>
+              <div style="height:8px;border-radius:99px;background:#EFEBF9;overflow:hidden">
+                <div style="height:100%;border-radius:99px;background:linear-gradient(90deg,#A98BFF,#7C5CFF);width:{{ techPct }}"></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:#fff;border:1px solid #ECEAF4;border-radius:20px;padding:26px;box-shadow:0 8px 30px rgba(20,16,40,.05)">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px">
+              <h3 style="font-family:'Space Grotesk';font-weight:700;font-size:18px;margin:0;letter-spacing:-.02em">Recommended toolkit</h3>
+              <span style="font-size:13px;color:#A39FB3">Where I'd suggest we start</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px">
+              <sc-for list="{{ recCards }}" as="rc" hint-placeholder-count="3">
+                <div style="{{ rc.style }}">
+                  <sc-if value="{{ rc.selected }}">
+                    <span style="position:absolute;top:-9px;left:14px;padding:3px 9px;border-radius:99px;background:#7C5CFF;color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.02em;box-shadow:0 4px 10px rgba(124,92,255,.35)">Suggested for you</span>
+                  </sc-if>
+                  <div style="{{ rc.markStyle }}">{{ rc.mark }}</div>
+                  <div style="font-weight:700;font-size:15px;margin-top:11px;letter-spacing:-.01em">{{ rc.name }}</div>
+                  <div style="font-size:12.5px;color:#8C8898;line-height:1.4;margin-top:3px">{{ rc.tagline }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="margin-top:18px;padding:14px 16px;border-radius:12px;background:#F4F1FF;border:1px solid #E9E3FF;display:flex;gap:11px;align-items:flex-start">
+              <span style="flex-shrink:0;width:20px;height:20px;border-radius:6px;background:#7C5CFF;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-top:1px">✦</span>
+              <span style="font-size:13.5px;color:#544F66;line-height:1.55;text-wrap:pretty">{{ recReason }}</span>
+            </div>
+          </div>
+
+          <div style="background:#fff;border:1px solid #ECEAF4;border-radius:20px;padding:26px;box-shadow:0 8px 30px rgba(20,16,40,.05)">
+            <h3 style="font-family:'Space Grotesk';font-weight:700;font-size:18px;margin:0 0 20px;letter-spacing:-.02em">How we'll work together</h3>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <sc-for list="{{ roadmap }}" as="ph" hint-placeholder-count="3">
+                <div style="display:flex;gap:16px;align-items:flex-start">
+                  <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0">
+                    <div style="{{ ph.numStyle }}">{{ ph.num }}</div>
+                    <div style="{{ ph.lineStyle }}"></div>
+                  </div>
+                  <div style="padding-bottom:18px">
+                    <div style="font-weight:700;font-size:15.5px;letter-spacing:-.01em">{{ ph.title }}</div>
+                    <div style="font-size:13.5px;color:#8C8898;line-height:1.5;margin-top:3px;text-wrap:pretty">{{ ph.desc }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="position:sticky;top:90px;background:#16121F;border-radius:20px;padding:28px;box-shadow:0 16px 44px rgba(20,16,40,.22);overflow:hidden">
+          <div style="position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,#7C5CFF33,transparent 70%)"></div>
+          <div style="position:relative">
+            <div style="display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:99px;background:rgba(124,92,255,.18);color:#C9B8FF;font-size:12px;font-weight:700;margin-bottom:18px">
+              <span style="width:6px;height:6px;border-radius:50%;background:#A98BFF;display:inline-block"></span>
+              Next step
+            </div>
+            <h3 style="font-family:'Space Grotesk';font-weight:700;font-size:23px;color:#fff;margin:0 0 8px;letter-spacing:-.02em;line-height:1.15">Your free 30-minute strategy call</h3>
+            <p style="font-size:14px;color:#A6A1B8;margin:0 0 22px;line-height:1.55">A focused session with {{ consultant }} to turn this plan into action.</p>
+            <div style="display:flex;flex-direction:column;gap:13px;margin-bottom:26px">
+              <sc-for list="{{ callPoints }}" as="cp" hint-placeholder-count="3">
+                <div style="display:flex;gap:11px;align-items:flex-start">
+                  <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:rgba(124,92,255,.22);color:#C9B8FF;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-top:1px">✓</span>
+                  <span style="font-size:14px;color:#D8D4E4;line-height:1.45">{{ cp }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <button onClick="{{ onSchedule }}" style="width:100%;padding:15px;border-radius:13px;border:none;background:#7C5CFF;color:#fff;font-weight:700;font-size:16px;cursor:pointer;box-shadow:0 10px 26px rgba(124,92,255,.4);transition:transform .15s" style-hover="transform:translateY(-2px)">Schedule my call</button>
+            <p style="text-align:center;font-size:12px;color:#76728A;margin:13px 0 0">No commitment — just clarity.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ SCHEDULE ============ -->
+  <sc-if value="{{ isSchedule }}" hint-placeholder-val="{{ true }}">
+    <div style="animation:scFade .4s ease both">
+      <div style="border-bottom:1px solid #ECEAF4;background:#fff;position:sticky;top:0;z-index:10">
+        <div style="display:flex;align-items:center;justify-content:space-between;max-width:1060px;margin:0 auto;padding:18px 24px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:32px;height:32px;border-radius:9px;background:#16121F;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:700;font-size:15px">{{ brandInitial }}</div>
+            <span style="font-weight:700;font-size:16px;letter-spacing:-.02em">{{ brandName }}</span>
+          </div>
+          <button onClick="{{ onBackDash }}" style="padding:9px 16px;border-radius:10px;border:1.5px solid #ECEAF4;background:#fff;color:#6E6A7C;font-weight:600;font-size:13.5px;cursor:pointer">← Back to plan</button>
+        </div>
+      </div>
+
+      <div style="max-width:1060px;margin:0 auto;padding:34px 24px 60px;display:grid;grid-template-columns:.85fr 1.4fr;gap:28px;align-items:start">
+        <div style="position:sticky;top:100px">
+          <div style="font-size:13px;font-weight:700;letter-spacing:.08em;color:#7C5CFF;margin-bottom:12px">FINAL STEP</div>
+          <h1 style="font-family:'Space Grotesk';font-weight:700;font-size:32px;letter-spacing:-.03em;margin:0 0 14px;line-height:1.1">Pick a time that works for you</h1>
+          <p style="font-size:16px;color:#6E6A7C;margin:0 0 26px;line-height:1.55;text-wrap:pretty">Grab a 30-minute slot with {{ consultant }}. We'll go straight to what matters for {{ firstName }}'s business.</p>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <sc-for list="{{ callPoints }}" as="cp" hint-placeholder-count="3">
+              <div style="display:flex;gap:12px;align-items:flex-start">
+                <span style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:#F0EBFF;color:#7C5CFF;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-top:1px">✓</span>
+                <span style="font-size:14.5px;color:#544F66;line-height:1.5">{{ cp }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="margin-top:26px;padding:16px 18px;border-radius:14px;background:#fff;border:1px solid #ECEAF4;display:flex;gap:13px;align-items:center;box-shadow:0 6px 20px rgba(20,16,40,.05)">
+            <div style="width:40px;height:40px;border-radius:11px;background:#16121F;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:700;font-size:17px;flex-shrink:0">{{ consultantInitial }}</div>
+            <div>
+              <div style="font-weight:700;font-size:15px">{{ consultant }}</div>
+              <div style="font-size:12.5px;color:#8C8898">{{ tagline }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border:1px solid #ECEAF4;border-radius:20px;overflow:hidden;box-shadow:0 10px 36px rgba(20,16,40,.07);min-height:680px">
+          <iframe src="{{ calendlyEmbed }}" style="width:100%;height:700px;border:none;display:block"></iframe>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:840},&quot;brandName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Vertea Group&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;tagline&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Business systems &amp; process consulting&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;consultantName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Verania&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;calendlyUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://calendly.com/verania-gescal/30min&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = {
+    screen: 'welcome',
+    step: 0,
+    name: '',
+    email: '',
+    businessType: '',
+    employees: '',
+    painPoint: '',
+    goal: '',
+    tools: [],
+    timeline: '',
+    techLevel: 50,
+  };
+
+  setField(k, v) { this.setState({ [k]: v }); }
+  toggleTool(t) {
+    this.setState(s => ({ tools: s.tools.includes(t) ? s.tools.filter(x => x !== t) : [...s.tools, t] }));
+  }
+
+  start() { this.setState({ screen: 'onboard', step: 0 }); }
+  back() { this.setState(s => ({ step: Math.max(0, s.step - 1) })); }
+  next() {
+    this.setState(s => {
+      if (s.step < 4) return { step: s.step + 1 };
+      return { screen: 'dashboard' };
+    });
+  }
+  restart() {
+    this.setState({ screen: 'welcome', step: 0, name: '', email: '', businessType: '', employees: '', painPoint: '', goal: '', tools: [], timeline: '', techLevel: 50 });
+  }
+
+  canProceed() {
+    const s = this.state;
+    if (s.step === 0) return s.name.trim().length > 0 && /\S+@\S+\.\S+/.test(s.email);
+    if (s.step === 1) return !!s.businessType && !!s.employees;
+    if (s.step === 2) return !!s.painPoint && !!s.goal;
+    if (s.step === 3) return s.tools.length > 0 && !!s.timeline;
+    return true;
+  }
+
+  techBucket() {
+    const t = this.state.techLevel;
+    if (t < 34) return 'Beginner';
+    if (t < 67) return 'Intermediate';
+    return 'Advanced';
+  }
+
+  recommend() {
+    const s = this.state;
+    const bigTeam = ['11–50', '51–200', '200+'].includes(s.employees);
+    const advanced = s.techLevel > 66;
+    const complexPain = ['visibility', 'scaling', 'manual'].includes(s.painPoint);
+    const teamPain = ['comms', 'process', 'scaling'].includes(s.painPoint);
+    if (advanced && complexPain) return 'custom';
+    if (bigTeam || teamPain) return 'monday';
+    return 'notion';
+  }
+
+  renderVals() {
+    const s = this.state;
+    const P = this.props;
+    const brandName = P.brandName || 'Gescal';
+    const tagline = P.tagline || 'Business systems & process consulting';
+    const consultant = P.consultantName || 'Verania';
+    const calUrl = P.calendlyUrl || 'https://calendly.com/verania-gescal/30min';
+
+    // ---- option data ----
+    const businessTypes = [
+      { key: 'retail', label: 'Retail & Commerce' },
+      { key: 'services', label: 'Professional Services' },
+      { key: 'hospitality', label: 'Hospitality & Food' },
+      { key: 'ecommerce', label: 'E‑commerce' },
+      { key: 'manufacturing', label: 'Manufacturing' },
+      { key: 'wellness', label: 'Health & Wellness' },
+      { key: 'creative', label: 'Creative & Agency' },
+      { key: 'other', label: 'Something else' },
+    ];
+    const employees = ['Just me', '2–10', '11–50', '51–200', '200+'];
+    const pains = [
+      { key: 'process', label: 'Disorganized processes', desc: 'Things live in too many places' },
+      { key: 'comms', label: 'Team communication', desc: 'Info gets lost or duplicated' },
+      { key: 'manual', label: 'Manual, repetitive work', desc: 'Too much copy‑paste & admin' },
+      { key: 'visibility', label: 'No clear visibility', desc: "Hard to see what's happening" },
+      { key: 'scaling', label: 'Struggling to scale', desc: 'What worked before is breaking' },
+      { key: 'tools', label: 'Tool overload', desc: 'Too many apps, none connected' },
+    ];
+    const goals = ['Save time', 'Better collaboration', 'Clearer data', 'Scale operations', 'Reduce costs'];
+    const toolList = ['Spreadsheets / Excel', 'Google Workspace', 'Email & WhatsApp', 'Trello / Asana', 'monday.com', 'Notion', 'QuickBooks', 'Pen & paper', 'Nothing yet'];
+    const timelines = ['As soon as possible', 'In 1–3 months', 'In 3–6 months', 'Just exploring'];
+
+    // ---- styles ----
+    const PILL = 'padding:10px 17px;border-radius:999px;border:1.5px solid #ECEAF4;background:#fff;cursor:pointer;font-weight:600;font-size:14.5px;color:#3A3550;transition:all .14s';
+    const PILL_SEL = 'padding:10px 17px;border-radius:999px;border:1.5px solid #7C5CFF;background:#7C5CFF;cursor:pointer;font-weight:600;font-size:14.5px;color:#fff;transition:all .14s;box-shadow:0 4px 12px rgba(124,92,255,.3)';
+    const CARD = 'display:flex;align-items:center;justify-content:center;text-align:center;padding:15px 14px;border-radius:13px;border:1.5px solid #ECEAF4;background:#fff;cursor:pointer;font-weight:600;font-size:14.5px;color:#3A3550;transition:all .14s;min-height:52px';
+    const CARD_SEL = 'display:flex;align-items:center;justify-content:center;text-align:center;padding:15px 14px;border-radius:13px;border:1.5px solid #7C5CFF;background:#F6F3FF;cursor:pointer;font-weight:600;font-size:14.5px;color:#16121F;transition:all .14s;min-height:52px;box-shadow:0 4px 14px rgba(124,92,255,.16)';
+    const DCARD = 'display:flex;flex-direction:column;gap:4px;text-align:left;padding:15px 16px;border-radius:13px;border:1.5px solid #ECEAF4;background:#fff;cursor:pointer;transition:all .14s';
+    const DCARD_SEL = 'display:flex;flex-direction:column;gap:4px;text-align:left;padding:15px 16px;border-radius:13px;border:1.5px solid #7C5CFF;background:#F6F3FF;cursor:pointer;transition:all .14s;box-shadow:0 4px 14px rgba(124,92,255,.16)';
+
+    const pillOpts = (list, sel, field) => list.map(o => {
+      const key = typeof o === 'string' ? o : o.key;
+      const label = typeof o === 'string' ? o : o.label;
+      return { label, style: sel === key ? PILL_SEL : PILL, onClick: () => this.setField(field, key) };
+    });
+    const cardOpts = (list, sel, field) => list.map(o => ({
+      label: o.label, style: sel === o.key ? CARD_SEL : CARD, onClick: () => this.setField(field, o.key)
+    }));
+
+    const businessOptions = cardOpts(businessTypes, s.businessType, 'businessType');
+    const employeeOptions = pillOpts(employees, s.employees, 'employees');
+    const painOptions = pains.map(o => ({
+      label: o.label, desc: o.desc,
+      titleColor: s.painPoint === o.key ? '#16121F' : '#3A3550',
+      descColor: s.painPoint === o.key ? '#7C5CFF' : '#8C8898',
+      style: s.painPoint === o.key ? DCARD_SEL : DCARD,
+      onClick: () => this.setField('painPoint', o.key),
+    }));
+    const goalOptions = pillOpts(goals, s.goal, 'goal');
+    const toolChips = toolList.map(t => ({
+      label: t, style: s.tools.includes(t) ? PILL_SEL : PILL, onClick: () => this.toggleTool(t)
+    }));
+    const timelineOptions = pillOpts(timelines, s.timeline, 'timeline');
+
+    // ---- step meta ----
+    const titles = [
+      ["Let's get acquainted", "First, tell me who I'm working with."],
+      ['Tell me about your business', 'This helps me understand your world and pace.'],
+      ["Where it hurts most", "Knowing your friction points shapes everything I'll recommend."],
+      ['Your current setup', "Let's see what you're working with today."],
+      ['How comfortable are you with tech?', 'Slide to where you feel most at home.'],
+    ];
+    const stepTitle = titles[s.step][0];
+    const stepSubtitle = titles[s.step][1];
+    const techLabel = this.techBucket();
+    const techDescs = {
+      Beginner: "Prefer it simple — you'd like things set up and explained clearly, step by step.",
+      Intermediate: "Comfortable with everyday tools and happy to learn a few new tricks.",
+      Advanced: "Fluent with software — you want power, automation and room to customize.",
+    };
+
+    // ---- recommendation ----
+    const rec = this.recommend();
+    const recDefs = [
+      { key: 'monday', name: 'monday.com', tagline: 'Visual workspace for teams & projects', mark: 'm' },
+      { key: 'notion', name: 'Notion', tagline: 'All‑in‑one docs, wiki & databases', mark: 'N' },
+      { key: 'custom', name: 'Custom system', tagline: 'A tailored platform built for you', mark: '✦' },
+    ];
+    const RCARD = 'position:relative;display:flex;flex-direction:column;padding:18px 16px;border-radius:15px;border:1.5px solid #ECEAF4;background:#FBFAFE';
+    const RCARD_SEL = 'position:relative;display:flex;flex-direction:column;padding:18px 16px;border-radius:15px;border:1.5px solid #7C5CFF;background:#fff;box-shadow:0 10px 28px rgba(124,92,255,.18)';
+    const MARK = 'width:38px;height:38px;border-radius:11px;background:#16121F;color:#fff;display:flex;align-items:center;justify-content:center;font-family:Space Grotesk;font-weight:700;font-size:18px';
+    const MARK_SEL = 'width:38px;height:38px;border-radius:11px;background:#7C5CFF;color:#fff;display:flex;align-items:center;justify-content:center;font-family:Space Grotesk;font-weight:700;font-size:18px;box-shadow:0 6px 16px rgba(124,92,255,.35)';
+    const recCards = recDefs.map(r => ({
+      ...r, selected: rec === r.key,
+      style: rec === r.key ? RCARD_SEL : RCARD,
+      markStyle: rec === r.key ? MARK_SEL : MARK,
+    }));
+    const empPhrase = s.employees === 'Just me' ? 'a lean, one‑person setup' : 'a team of ' + s.employees;
+    const recReasons = {
+      monday: 'With ' + empPhrase + ', a visual workspace keeps projects, hand‑offs and processes moving — so nothing slips through the cracks.',
+      notion: 'For a focused team, an all‑in‑one Notion hub brings your docs, data and tasks into one simple, flexible place you can adopt at your own pace.',
+      custom: 'Your goals point beyond off‑the‑shelf tools. A system built around your exact workflow will fit how you work and scale right alongside you.',
+    };
+
+    // ---- profile snapshot ----
+    const labelOf = (list, key) => { const f = list.find(x => x.key === key); return f ? f.label : '—'; };
+    const profileItems = [
+      { label: 'Business', value: labelOf(businessTypes, s.businessType) },
+      { label: 'Team size', value: s.employees || '—' },
+      { label: 'Main focus', value: labelOf(pains, s.painPoint) },
+      { label: 'Goal', value: s.goal || '—' },
+    ];
+
+    // ---- roadmap ----
+    const NUM = 'width:30px;height:30px;border-radius:50%;background:#F0EBFF;color:#7C5CFF;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;font-family:Space Grotesk';
+    const roadmapDefs = [
+      { num: '1', title: 'Discover', desc: 'We map your workflows and pinpoint the biggest time leaks and bottlenecks.' },
+      { num: '2', title: 'Design', desc: 'I design a system around your tools, team and goals — no bloat, just what fits.' },
+      { num: '3', title: 'Implement', desc: 'We roll it out, train your team, and refine as you grow.' },
+    ];
+    const roadmap = roadmapDefs.map((r, i) => ({
+      ...r, numStyle: NUM,
+      lineStyle: i < roadmapDefs.length - 1 ? 'width:2px;flex:1;min-height:24px;background:#EDE8F8;margin:4px 0' : 'width:2px;height:0',
+    }));
+
+    const callPoints = [
+      'Walk through your single biggest bottleneck',
+      'Get a tailored tool & system recommendation',
+      'Leave with clear next steps you can act on',
+    ];
+
+    const firstName = (s.name.trim().split(/\s+/)[0]) || 'there';
+    const proceed = this.canProceed();
+    const continueDisabled = !proceed;
+    const PRIMARY = 'flex:1;padding:15px 24px;border-radius:12px;border:none;background:#7C5CFF;color:#fff;font-weight:700;font-size:16px;cursor:pointer;box-shadow:0 8px 20px rgba(124,92,255,.32);transition:transform .15s';
+    const PRIMARY_DIS = 'flex:1;padding:15px 24px;border-radius:12px;border:none;background:#E7E4F0;color:#AEAABD;font-weight:700;font-size:16px;cursor:not-allowed';
+
+    return {
+      brandName, tagline, consultant,
+      brandInitial: brandName.charAt(0).toUpperCase(),
+      consultantInitial: consultant.charAt(0).toUpperCase(),
+      isWelcome: s.screen === 'welcome',
+      isOnboard: s.screen === 'onboard',
+      isDashboard: s.screen === 'dashboard',
+      isSchedule: s.screen === 'schedule',
+      onStart: () => this.start(),
+
+      // onboarding
+      isStep0: s.step === 0, isStep1: s.step === 1, isStep2: s.step === 2, isStep3: s.step === 3, isStep4: s.step === 4,
+      stepKey: 'step-' + s.step,
+      stepNum: s.step + 1,
+      stepLabel: 'Step ' + (s.step + 1) + ' / 5',
+      progressWidth: ((s.step + 1) / 5 * 100) + '%',
+      stepTitle, stepSubtitle,
+      name: s.name, email: s.email,
+      setName: (e) => this.setField('name', e.target.value),
+      setEmail: (e) => this.setField('email', e.target.value),
+      businessOptions, employeeOptions, painOptions, goalOptions, toolChips, timelineOptions,
+      techLevel: s.techLevel, techLabel, techDesc: techDescs[techLabel],
+      setTech: (e) => this.setField('techLevel', parseInt(e.target.value, 10)),
+      showBack: s.step > 0,
+      onBack: () => this.back(),
+      onContinue: () => { if (this.canProceed()) this.next(); },
+      continueDisabled,
+      continueStyle: continueDisabled ? PRIMARY_DIS : PRIMARY,
+      continueLabel: s.step === 4 ? 'See my plan' : 'Continue',
+
+      // dashboard
+      firstName, profileItems, techPct: s.techLevel + '%',
+      recCards, recReason: recReasons[rec], roadmap, callPoints,
+      onSchedule: () => this.setState({ screen: 'schedule' }),
+      onRestart: () => this.restart(),
+
+      // schedule
+      onBackDash: () => this.setState({ screen: 'dashboard' }),
+      calendlyEmbed: calUrl + '?hide_gdpr_banner=1&primary_color=7c5cff&background_color=ffffff&text_color=16121f',
+    };
+  }
+}
+</script>
+</body>
+</html>
